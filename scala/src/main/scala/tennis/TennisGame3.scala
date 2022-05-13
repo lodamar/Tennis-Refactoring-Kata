@@ -7,22 +7,20 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
 
   def points: (Int, Int) = (p1, p2)
 
-  def calculateScore(): String = {
-    var s: String = ""
+  def calculateScore(): String =
     if (points.lestThenFourButNotDeuce) {
       val p = Array("Love", "Fifteen", "Thirty", "Forty")
-      s = p(p1)
+      val s = p(p1)
       if (points.same) s + "-All" else s + "-" + p(p2)
     } else {
       if (points.same) "Deuce"
       else {
-        s = if (points.oneGreaterThanTwo) p1N else p2N
+        val s = if (points.oneGreaterThanTwo) p1N else p2N
         if (points.difference * points.difference == 1) "Advantage " + s else "Win for " + s
       }
     }
-  }
 
-  implicit class __PointsOps(points: (Int, Int)) {
+  implicit class PointsOps(points: (Int, Int)) {
     val difference: Int = p1 - p2
     val oneGreaterThanTwo: Boolean = p1 > p2
     val same: Boolean = p1 == p2
