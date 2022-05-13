@@ -5,13 +5,10 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
   var p2: Int = 0
   var p1: Int = 0
 
-  def points: (Int, Int) = (p1, p2)
-
   def calculateScore(): String =
     if (points.lestThenFourButNotDeuce) {
-      val p = Array("Love", "Fifteen", "Thirty", "Forty")
-      val s = p(p1)
-      if (points.same) s + "-All" else s + "-" + p(p2)
+      if (points.same) pointToScore(p1) + "-All"
+      else pointToScore(p1) + "-" + pointToScore(p2)
     } else {
       if (points.same) "Deuce"
       else {
@@ -20,6 +17,15 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
       }
     }
 
+  val pointToScore: Int => String = {
+    case 0 => "Love"
+    case 1 => "Fifteen"
+    case 2 => "Thirty"
+    case 3 => "Forty"
+  }
+
+  def points: (Int, Int) = (p1, p2)
+
   implicit class PointsOps(points: (Int, Int)) {
     val difference: Int = p1 - p2
     val oneGreaterThanTwo: Boolean = p1 > p2
@@ -27,12 +33,10 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
     val lestThenFourButNotDeuce: Boolean = p1 < 4 && p2 < 4 && !(p1 + p2 == 6)
   }
 
-  def wonPoint(playerName: String) {
+  def wonPoint(playerName: String): Unit =
     if (playerName == "player1")
       this.p1 += 1
     else
       this.p2 += 1
-
-  }
 
 }
