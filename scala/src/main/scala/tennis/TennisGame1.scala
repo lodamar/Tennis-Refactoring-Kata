@@ -36,10 +36,12 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
   }
 
   private def scoreAfterFourPoints(difference: Int) =
-    if (difference == 1) "Advantage player1"
-    else if (difference == -1) "Advantage player2"
-    else if (difference >= 2) "Win for player1"
-    else "Win for player2"
+    difference match {
+      case 1           => "Advantage player1"
+      case -1          => "Advantage player2"
+      case n if n >= 2 => "Win for player1"
+      case _           => "Win for player2"
+    }
 
   private def scoreWhenSamePoints(points: Int) =
     points match {
