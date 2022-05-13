@@ -5,7 +5,7 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   var points: Points = Points(player1 = player1Name, player2 = player2Name)
 
   def calculateScore(): String = {
-    val analysis: ScoreAnalyzer = points match {
+    val analysis: PointsAnalyzer = points match {
       case Points(_, p1, _, p2) if p1 >= 4 && p2 >= 0 && (p1 - p2) >= 2 => Win1
       case Points(_, p1, _, p2) if p2 >= 4 && p1 >= 0 && (p2 - p1) >= 2 => Win2
       case Points(_, p1, _, p2) if p1 > p2 && p2 >= 3                   => Advantage1
@@ -46,15 +46,15 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   def wonPoint(player: String): Unit =
     points = points pointTo player
 
-  trait ScoreAnalyzer
-  case class Else(p1: Int, p2: Int) extends ScoreAnalyzer
-  case class Same(p: Int) extends ScoreAnalyzer
-  case class Love2(p: Int) extends ScoreAnalyzer
-  case class Love1(p: Int) extends ScoreAnalyzer
-  object Win1 extends ScoreAnalyzer
-  object Win2 extends ScoreAnalyzer
-  object Advantage1 extends ScoreAnalyzer
-  object Advantage2 extends ScoreAnalyzer
+  trait PointsAnalyzer
+  case class Else(p1: Int, p2: Int) extends PointsAnalyzer
+  case class Same(p: Int) extends PointsAnalyzer
+  case class Love2(p: Int) extends PointsAnalyzer
+  case class Love1(p: Int) extends PointsAnalyzer
+  object Win1 extends PointsAnalyzer
+  object Win2 extends PointsAnalyzer
+  object Advantage1 extends PointsAnalyzer
+  object Advantage2 extends PointsAnalyzer
 
   case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
     def pointTo(player: String): Points =
