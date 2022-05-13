@@ -82,28 +82,11 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
     return score
   }
 
-  def SetP1Score(number: Int) {
-    for (i <- 0 until number by 1)
-      P1Score()
-  }
-
-  def SetP2Score(number: Int) {
-    for (i <- 0 until number by 1)
-      P2Score()
-  }
-
-  def P2Score() {
-    P2point += 1
-  }
-
-  def wonPoint(player: String) {
+  def wonPoint(player: String): Unit = {
     if (player == "player1")
-      P1Score()
+      P1point += 1
     else
-      P2Score()
+      P2point += 1
   }
 
-  def P1Score() {
-    P1point += 1
-  }
 }
