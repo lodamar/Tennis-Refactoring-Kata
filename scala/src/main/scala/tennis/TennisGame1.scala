@@ -11,31 +11,27 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
       m_score2 += 1
   }
 
-  def calculateScore(): String = {
-    var score: String = ""
-    var tempScore = 0
+  def calculateScore(): String =
     if (m_score1 == m_score2) {
-      score = scoreWhenSamePoints(m_score1)
+      scoreWhenSamePoints(m_score1)
     } else if (m_score1 >= 4 || m_score2 >= 4) {
-      val minusResult = m_score1 - m_score2
-      score = scoreAfterFourPoints(minusResult)
+      scoreAtDeuceTieBreak(m_score1 - m_score2)
     } else {
-      for (i <- 1 until 3 by 1) {
-        if (i == 1) tempScore = m_score1
-        else { score += "-"; tempScore = m_score2; }
-        val tempScore2 = tempScore match {
-          case 0 => "Love"
-          case 1 => "Fifteen"
-          case 2 => "Thirty"
-          case 3 => "Forty"
-        }
-        score += tempScore2
-      }
+      scoreWhenDifferentPointsBeforeDeuce(m_score1, m_score2)
     }
-    return score
-  }
 
-  private def scoreAfterFourPoints(difference: Int) =
+  private def scoreWhenDifferentPointsBeforeDeuce(points1: Int, points2: Int): String =
+    List(points1, points2).map(pointsToScore).mkString("-")
+
+  private def pointsToScore(points: Int): String =
+    points match {
+      case 0 => "Love"
+      case 1 => "Fifteen"
+      case 2 => "Thirty"
+      case 3 => "Forty"
+    }
+
+  private def scoreAtDeuceTieBreak(difference: Int): String =
     difference match {
       case 1           => "Advantage player1"
       case -1          => "Advantage player2"
@@ -43,7 +39,7 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
       case _           => "Win for player2"
     }
 
-  private def scoreWhenSamePoints(points: Int) =
+  private def scoreWhenSamePoints(points: Int): String =
     points match {
       case 0 => "Love-All"
       case 1 => "Fifteen-All"
