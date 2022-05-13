@@ -22,33 +22,32 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
 
     if (P1point == P2point) {
       return P1point match {
-        case 0 => "Love-All"
-        case 1 => "Fifteen-All"
-        case 2 => "Thirty-All"
-        case _ => "Deuce"
+        case 0                      => "Love-All"
+        case n if 1 to 2 contains n => pointsToScore(n) + "-All"
+        case _                      => "Deuce"
       }
     }
 
     if (P1point > 0 && P2point == 0) {
-      return singleScoreForPoints(P1point) + "-Love"
+      return pointsToScore(P1point) + "-Love"
     }
     if (P2point > 0 && P1point == 0) {
-      return "Love-" + singleScoreForPoints(P2point)
+      return "Love-" + pointsToScore(P2point)
     }
 
     if (P1point > P2point && P1point < 4) {
       val t = (P1point, P2point) match {
-        case (2, 1) => ("Thirty", "Fifteen")
-        case (3, 1) => ("Forty", "Fifteen")
-        case (3, 2) => ("Forty", "Thirty")
+        case (2, 1) => (pointsToScore(P1point), pointsToScore(P2point))
+        case (3, 1) => (pointsToScore(P1point), pointsToScore(P2point))
+        case (3, 2) => (pointsToScore(P1point), pointsToScore(P2point))
       }
       return t._1 + "-" + t._2
     }
     if (P2point > P1point && P2point < 4) {
       val t = (P1point, P2point) match {
-        case (1, 2) => ("Fifteen", "Thirty")
-        case (1, 3) => ("Fifteen", "Forty")
-        case (2, 3) => ("Thirty", "Forty")
+        case (1, 2) => (pointsToScore(P1point), pointsToScore(P2point))
+        case (1, 3) => (pointsToScore(P1point), pointsToScore(P2point))
+        case (2, 3) => (pointsToScore(P1point), pointsToScore(P2point))
       }
       return t._1 + "-" + t._2
     }
@@ -56,7 +55,7 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
     throw new AssertionError("should never come here")
   }
 
-  private def singleScoreForPoints(points: Int) = points match {
+  private def pointsToScore(points: Int) = points match {
     case 1 => "Fifteen"
     case 2 => "Thirty"
     case 3 => "Forty"
