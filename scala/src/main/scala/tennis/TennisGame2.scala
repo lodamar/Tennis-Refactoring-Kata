@@ -16,6 +16,13 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       return "Win for player2"
     }
 
+    if (P1point > P2point && P2point >= 3) {
+      return "Advantage player1"
+    }
+    if (P2point > P1point && P1point >= 3) {
+      return "Advantage player2"
+    }
+
     var score = ""
     if (P1point == P2point && P1point < 4) {
       if (P1point == 0)
@@ -75,14 +82,6 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       score = P1res + "-" + P2res
     }
 
-    if (P1point > P2point && P2point >= 3) {
-      score = "Advantage player1"
-    }
-
-    if (P2point > P1point && P1point >= 3) {
-      score = "Advantage player2"
-    }
-
     return score
   }
 
@@ -96,15 +95,15 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       P2Score()
   }
 
-  def P2Score() {
-    P2point += 1
-  }
-
   def wonPoint(player: String) {
     if (player == "player1")
       P1Score()
     else
       P2Score()
+  }
+
+  def P2Score() {
+    P2point += 1
   }
 
   def P1Score() {
