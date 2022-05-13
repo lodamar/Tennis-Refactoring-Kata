@@ -46,20 +46,20 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   def wonPoint(player: String): Unit =
     points = points pointTo player
 
-}
+  trait ScoreAnalyzer
+  case class Else(p1: Int, p2: Int) extends ScoreAnalyzer
+  case class Same(p: Int) extends ScoreAnalyzer
+  case class Love2(p: Int) extends ScoreAnalyzer
+  case class Love1(p: Int) extends ScoreAnalyzer
+  object Win1 extends ScoreAnalyzer
+  object Win2 extends ScoreAnalyzer
+  object Advantage1 extends ScoreAnalyzer
+  object Advantage2 extends ScoreAnalyzer
 
-case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
-  def pointTo(player: String): Points =
-    if (player == player1) copy(points1 = points1 + 1)
-    else copy(points2 = points2 + 1)
-}
+  case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
+    def pointTo(player: String): Points =
+      if (player == player1) copy(points1 = points1 + 1)
+      else copy(points2 = points2 + 1)
+  }
 
-trait ScoreAnalyzer
-case class Else(p1: Int, p2: Int) extends ScoreAnalyzer
-case class Same(p: Int) extends ScoreAnalyzer
-case class Love2(p: Int) extends ScoreAnalyzer
-case class Love1(p: Int) extends ScoreAnalyzer
-object Win1 extends ScoreAnalyzer
-object Win2 extends ScoreAnalyzer
-object Advantage1 extends ScoreAnalyzer
-object Advantage2 extends ScoreAnalyzer
+}
