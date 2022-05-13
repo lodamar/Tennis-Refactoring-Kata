@@ -9,6 +9,13 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   var P2res = ""
 
   def calculateScore(): String = {
+    if (P1point >= 4 && P2point >= 0 && (P1point - P2point) >= 2) {
+      return "Win for player1"
+    }
+    if (P2point >= 4 && P1point >= 0 && (P2point - P1point) >= 2) {
+      return "Win for player2"
+    }
+
     var score = ""
     if (P1point == P2point && P1point < 4) {
       if (P1point == 0)
@@ -76,12 +83,6 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       score = "Advantage player2"
     }
 
-    if (P1point >= 4 && P2point >= 0 && (P1point - P2point) >= 2) {
-      score = "Win for player1"
-    }
-    if (P2point >= 4 && P1point >= 0 && (P2point - P1point) >= 2) {
-      score = "Win for player2"
-    }
     return score
   }
 
