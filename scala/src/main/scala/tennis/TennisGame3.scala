@@ -7,13 +7,14 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
 
   def calculateScore(): String =
     if (points.lestThenFourButNotDeuce) {
-      if (points.same) pointToScore(p1) + "-All"
-      else pointToScore(p1) + "-" + pointToScore(p2)
+      if (points.areSame) pointToScore(p1) + "-All"
+      else points.map(pointToScore(_) + "-" + pointToScore(_))
     } else {
-      if (points.same) "Deuce"
+      if (points.areSame) "Deuce"
       else {
-        val s = if (points.oneGreaterThanTwo) p1N else p2N
-        if (points.difference * points.difference == 1) "Advantage " + s else "Win for " + s
+        val player = points.map((p1, p2) => if (p1 > p2) p1N else p2N)
+        if (points differenceIs 1) "Advantage " + player
+        else "Win for " + player
       }
     }
 
@@ -27,10 +28,12 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
   def points: (Int, Int) = (p1, p2)
 
   implicit class PointsOps(points: (Int, Int)) {
+    def map[A](f: (Int, Int) => A): A = f(points._1, points._2)
+    def are(p: (Int, Int) => Boolean): Boolean = p(points._1, points._2)
+    val lestThenFourButNotDeuce: Boolean = are((p1, p2) => p1 < 4 && p2 < 4 && !(p1 + p2 == 6))
+    val areSame: Boolean = are(_ == _)
     val difference: Int = p1 - p2
-    val oneGreaterThanTwo: Boolean = p1 > p2
-    val same: Boolean = p1 == p2
-    val lestThenFourButNotDeuce: Boolean = p1 < 4 && p2 < 4 && !(p1 + p2 == 6)
+    def differenceIs(i: Int): Boolean = points.difference * points.difference == i
   }
 
   def wonPoint(playerName: String): Unit =
