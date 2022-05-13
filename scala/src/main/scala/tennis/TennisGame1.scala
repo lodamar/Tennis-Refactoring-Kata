@@ -1,30 +1,20 @@
 package tennis
 
 class TennisGame1(val player1Name: String, val player2Name: String) extends TennisGame {
-  var m_score1: Int = 0
-  var m_score2: Int = 0
   var points: Points = Points(player1 = player1Name, player2 = player2Name)
 
   def wonPoint(playerName: String) {
     points = points.addOneTo(playerName)
-
-    if (playerName == "player1")
-      m_score1 += 1
-    else
-      m_score2 += 1
   }
 
-  def calculateScore(): String = {
-    assert(m_score1 == points.points1, s"points 1: $m_score1 != ${points.points1}")
-    assert(m_score2 == points.points2, s"points 2: $m_score2 != ${points.points2}")
-    if (points.same()) {
-      scoreWhenSamePoints(m_score1)
-    } else if (m_score1 >= 4 || m_score2 >= 4) {
-      scoreAtDeuceTieBreak(m_score1 - m_score2)
+  def calculateScore(): String =
+    if (points.same) {
+      scoreWhenSamePoints(points.points1)
+    } else if (points.deuceTieBreak) {
+      scoreAtDeuceTieBreak(points.points1 - points.points2)
     } else {
-      scoreWhenDifferentPointsBeforeDeuce(m_score1, m_score2)
+      scoreWhenDifferentPointsBeforeDeuce(points.points1, points.points2)
     }
-  }
 
   private def scoreWhenDifferentPointsBeforeDeuce(points1: Int, points2: Int): String =
     List(points1, points2).map(pointsToScore).mkString("-")
@@ -54,7 +44,8 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
     }
 
   case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
-    def same(): Boolean = points1 == points2
+    val same: Boolean = points1 == points2
+    val deuceTieBreak: Boolean = points1 >= 4 || points2 >= 4
 
     def addOneTo(player: String): Points =
       if (player == player1) copy(points1 = points1 + 1)
