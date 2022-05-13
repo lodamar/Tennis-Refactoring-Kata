@@ -2,19 +2,18 @@ package tennis
 
 class TennisGame2(val player1Name: String, val player2Name: String) extends TennisGame {
 
-  var P1point = 0
-  var P2point = 0
+  var points: Points = Points(player1 = player1Name, player2 = player2Name)
 
   def calculateScore(): String = {
-    val analysis: ScoreAnalyzer = (P1point, P2point) match {
-      case (p1, p2) if p1 >= 4 && p2 >= 0 && (p1 - p2) >= 2 => Win1
-      case (p1, p2) if p2 >= 4 && p1 >= 0 && (p2 - p1) >= 2 => Win2
-      case (p1, p2) if p1 > p2 && p2 >= 3                   => Advantage1
-      case (p1, p2) if p2 > p1 && p1 >= 3                   => Advantage2
-      case (p1, p2) if p1 == p2                             => Same(p1)
-      case (p1, p2) if p1 > 0 && p2 == 0                    => Love2(p1)
-      case (p1, p2) if p2 > 0 && p1 == 0                    => Love1(p2)
-      case (p1, p2)                                         => Else(p1, p2)
+    val analysis: ScoreAnalyzer = points match {
+      case Points(_, p1, _, p2) if p1 >= 4 && p2 >= 0 && (p1 - p2) >= 2 => Win1
+      case Points(_, p1, _, p2) if p2 >= 4 && p1 >= 0 && (p2 - p1) >= 2 => Win2
+      case Points(_, p1, _, p2) if p1 > p2 && p2 >= 3                   => Advantage1
+      case Points(_, p1, _, p2) if p2 > p1 && p1 >= 3                   => Advantage2
+      case Points(_, p1, _, p2) if p1 == p2                             => Same(p1)
+      case Points(_, p1, _, p2) if p1 > 0 && p2 == 0                    => Love2(p1)
+      case Points(_, p1, _, p2) if p2 > 0 && p1 == 0                    => Love1(p2)
+      case Points(_, p1, _, p2)                                         => Else(p1, p2)
     }
 
     analysis match {
@@ -45,11 +44,14 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   }
 
   def wonPoint(player: String): Unit =
-    if (player == "player1")
-      P1point += 1
-    else
-      P2point += 1
+    points = points pointTo player
 
+}
+
+case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
+  def pointTo(player: String): Points =
+    if (player == player1) copy(points1 = points1 + 1)
+    else copy(points2 = points2 + 1)
 }
 
 trait ScoreAnalyzer
