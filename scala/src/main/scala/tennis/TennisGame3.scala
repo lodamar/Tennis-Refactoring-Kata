@@ -7,17 +7,33 @@ class TennisGame3(val p1N: String, val p2N: String) extends TennisGame {
 
   def calculateScore(): String = {
     var s: String = ""
-    if (p1 < 4 && p2 < 4 && !(p1 + p2 == 6)) {
+    if (lestThenFourButNotDeuce) {
       val p = Array("Love", "Fifteen", "Thirty", "Forty")
       s = p(p1)
-      if (p1 == p2) s + "-All" else s + "-" + p(p2)
+      if (same) s + "-All" else s + "-" + p(p2)
     } else {
-      if (p1 == p2) "Deuce"
+      if (same) "Deuce"
       else {
-        s = if (p1 > p2) p1N else p2N
-        if ((p1 - p2) * (p1 - p2) == 1) "Advantage " + s else "Win for " + s
+        s = if (oneGreaterThanTwo) p1N else p2N
+        if ((difference) * (difference) == 1) "Advantage " + s else "Win for " + s
       }
     }
+  }
+
+  private def difference = {
+    p1 - p2
+  }
+
+  private def oneGreaterThanTwo = {
+    p1 > p2
+  }
+
+  private def same = {
+    p1 == p2
+  }
+
+  private def lestThenFourButNotDeuce = {
+    p1 < 4 && p2 < 4 && !(p1 + p2 == 6)
   }
 
   def wonPoint(playerName: String) {
