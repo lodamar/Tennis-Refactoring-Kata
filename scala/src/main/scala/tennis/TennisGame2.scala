@@ -5,9 +5,6 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   var P1point = 0
   var P2point = 0
 
-  var P1res = ""
-  var P2res = ""
-
   def calculateScore(): String = {
     if (P1point >= 4 && P2point >= 0 && (P1point - P2point) >= 2) {
       return "Win for player1"
@@ -32,61 +29,43 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       }
     }
 
-    var score = ""
     if (P1point > 0 && P2point == 0) {
-      if (P1point == 1)
-        P1res = "Fifteen"
-      if (P1point == 2)
-        P1res = "Thirty"
-      if (P1point == 3)
-        P1res = "Forty"
-
-      P2res = "Love"
-      score = P1res + "-" + P2res
+      return singleScoreForPoints(P1point) + "-Love"
     }
     if (P2point > 0 && P1point == 0) {
-      if (P2point == 1)
-        P2res = "Fifteen"
-      if (P2point == 2)
-        P2res = "Thirty"
-      if (P2point == 3)
-        P2res = "Forty"
-
-      P1res = "Love"
-      score = P1res + "-" + P2res
+      return "Love-" + singleScoreForPoints(P2point)
     }
 
     if (P1point > P2point && P1point < 4) {
-      if (P1point == 2)
-        P1res = "Thirty"
-      if (P1point == 3)
-        P1res = "Forty"
-      if (P2point == 1)
-        P2res = "Fifteen"
-      if (P2point == 2)
-        P2res = "Thirty"
-      score = P1res + "-" + P2res
+      val t = (P1point, P2point) match {
+        case (2, 1) => ("Thirty", "Fifteen")
+        case (3, 1) => ("Forty", "Fifteen")
+        case (3, 2) => ("Forty", "Thirty")
+      }
+      return t._1 + "-" + t._2
     }
     if (P2point > P1point && P2point < 4) {
-      if (P2point == 2)
-        P2res = "Thirty"
-      if (P2point == 3)
-        P2res = "Forty"
-      if (P1point == 1)
-        P1res = "Fifteen"
-      if (P1point == 2)
-        P1res = "Thirty"
-      score = P1res + "-" + P2res
+      val t = (P1point, P2point) match {
+        case (1, 2) => ("Fifteen", "Thirty")
+        case (1, 3) => ("Fifteen", "Forty")
+        case (2, 3) => ("Thirty", "Forty")
+      }
+      return t._1 + "-" + t._2
     }
 
-    return score
+    throw new AssertionError("should never come here")
   }
 
-  def wonPoint(player: String): Unit = {
+  private def singleScoreForPoints(points: Int) = points match {
+    case 1 => "Fifteen"
+    case 2 => "Thirty"
+    case 3 => "Forty"
+  }
+
+  def wonPoint(player: String): Unit =
     if (player == "player1")
       P1point += 1
     else
       P2point += 1
-  }
 
 }
