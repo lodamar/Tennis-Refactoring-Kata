@@ -1,125 +1,65 @@
 package tennis
 
-class TennisGame2 (val player1Name : String, val player2Name : String) extends TennisGame {
+class TennisGame2(val player1Name: String, val player2Name: String) extends TennisGame {
 
-    var P1point = 0
-    var P2point  = 0
+  var points: Points = Points(player1 = player1Name, player2 = player2Name)
 
-    var P1res = ""
-    var P2res = ""
-
-    def calculateScore() : String = {
-        var score = ""
-        if (P1point == P2point && P1point < 4)
-        {
-            if (P1point==0)
-                score = "Love"
-            if (P1point==1)
-                score = "Fifteen"
-            if (P1point==2)
-                score = "Thirty"
-            score += "-All"
-        }
-        if (P1point==P2point && P1point>=3)
-            score = "Deuce"
-
-        if (P1point > 0 && P2point==0)
-        {
-            if (P1point==1)
-                P1res = "Fifteen"
-            if (P1point==2)
-                P1res = "Thirty"
-            if (P1point==3)
-                P1res = "Forty"
-
-            P2res = "Love"
-            score = P1res + "-" + P2res
-        }
-        if (P2point > 0 && P1point==0)
-        {
-            if (P2point==1)
-                P2res = "Fifteen"
-            if (P2point==2)
-                P2res = "Thirty"
-            if (P2point==3)
-                P2res = "Forty"
-
-            P1res = "Love"
-            score = P1res + "-" + P2res
-        }
-
-        if (P1point>P2point && P1point < 4)
-        {
-            if (P1point==2)
-                P1res="Thirty"
-            if (P1point==3)
-                P1res="Forty"
-            if (P2point==1)
-                P2res="Fifteen"
-            if (P2point==2)
-                P2res="Thirty"
-            score = P1res + "-" + P2res
-        }
-        if (P2point>P1point && P2point < 4)
-        {
-            if (P2point==2)
-                P2res="Thirty"
-            if (P2point==3)
-                P2res="Forty"
-            if (P1point==1)
-                P1res="Fifteen"
-            if (P1point==2)
-                P1res="Thirty"
-            score = P1res + "-" + P2res
-        }
-
-        if (P1point > P2point && P2point >= 3)
-        {
-            score = "Advantage player1"
-        }
-
-        if (P2point > P1point && P1point >= 3)
-        {
-            score = "Advantage player2"
-        }
-
-        if (P1point>=4 && P2point>=0 && (P1point-P2point)>=2)
-        {
-            score = "Win for player1"
-        }
-        if (P2point>=4 && P1point>=0 && (P2point-P1point)>=2)
-        {
-            score = "Win for player2"
-        }
-        return score
+  def calculateScore(): String = {
+    val analysis: PointsAnalyzer = points match {
+      case Points(_, p1, _, p2) if p1 >= 4 && p2 >= 0 && (p1 - p2) >= 2 => Win1
+      case Points(_, p1, _, p2) if p2 >= 4 && p1 >= 0 && (p2 - p1) >= 2 => Win2
+      case Points(_, p1, _, p2) if p1 > p2 && p2 >= 3                   => Advantage1
+      case Points(_, p1, _, p2) if p2 > p1 && p1 >= 3                   => Advantage2
+      case Points(_, p1, _, p2) if p1 == p2                             => Same(p1)
+      case Points(_, p1, _, p2) if p1 > 0 && p2 == 0                    => Love2(p1)
+      case Points(_, p1, _, p2) if p2 > 0 && p1 == 0                    => Love1(p2)
+      case Points(_, p1, _, p2)                                         => Else(p1, p2)
     }
 
-    def SetP1Score(number : Int) {
-        for (i <- 0 until number by 1)
-        {
-            P1Score()
-        }
+    analysis match {
+      case Win1         => "Win for player1"
+      case Win2         => "Win for player2"
+      case Advantage1   => "Advantage player1"
+      case Advantage2   => "Advantage player2"
+      case Same(p)      => pointsToScore(p, p)
+      case Love2(p1)    => pointsToScore(p1, 0)
+      case Love1(p2)    => pointsToScore(0, p2)
+      case Else(p1, p2) => pointsToScore(p1, p2)
+    }
+  }
+
+  private def pointsToScore(p1: Int, p2: Int): String =
+    (p1, p2) match {
+      case (0, 0)                     => "Love-All"
+      case (a, b) if a == b && a <= 2 => pointsToScore(a) + "-All"
+      case (a, b) if a == b           => "Deuce"
+      case _                          => pointsToScore(p1) + "-" + pointsToScore(p2)
     }
 
-    def SetP2Score(number : Int) {
-      for (i <- 0 until number by 1)
-        {
-            P2Score()
-        }
-    }
+  private def pointsToScore(points: Int) = points match {
+    case 0 => "Love"
+    case 1 => "Fifteen"
+    case 2 => "Thirty"
+    case 3 => "Forty"
+  }
 
-    def P1Score(){
-        P1point += 1
-    }
+  def wonPoint(player: String): Unit =
+    points = points pointTo player
 
-    def P2Score(){
-        P2point +=1
-    }
+  sealed trait PointsAnalyzer
+  case class Else(p1: Int, p2: Int) extends PointsAnalyzer
+  case class Same(p: Int) extends PointsAnalyzer
+  case class Love2(p: Int) extends PointsAnalyzer
+  case class Love1(p: Int) extends PointsAnalyzer
+  object Win1 extends PointsAnalyzer
+  object Win2 extends PointsAnalyzer
+  object Advantage1 extends PointsAnalyzer
+  object Advantage2 extends PointsAnalyzer
 
-    def wonPoint(player : String) {
-        if (player == "player1")
-            P1Score()
-        else
-            P2Score()
-    }
+  case class Points(player1: String, points1: Int = 0, player2: String, points2: Int = 0) {
+    def pointTo(player: String): Points =
+      if (player == player1) copy(points1 = points1 + 1)
+      else copy(points2 = points2 + 1)
+  }
+
 }
