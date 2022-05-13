@@ -23,15 +23,12 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
       return "Advantage player2"
     }
 
-    if (P1point == P2point && P1point >= 3)
-      return "Deuce"
-
     if (P1point == P2point) {
-      assert(P1point < 4, "P1point !<4: " + P1point)
       return P1point match {
         case 0 => "Love-All"
         case 1 => "Fifteen-All"
         case 2 => "Thirty-All"
+        case _ => "Deuce"
       }
     }
 
