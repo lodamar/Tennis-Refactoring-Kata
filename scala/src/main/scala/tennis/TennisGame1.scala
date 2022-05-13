@@ -15,13 +15,7 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
     var score: String = ""
     var tempScore = 0
     if (m_score1 == m_score2) {
-      score = m_score1 match {
-        case 0 => "Love-All"
-        case 1 => "Fifteen-All"
-        case 2 => "Thirty-All"
-        case _ => "Deuce"
-
-      }
+      score = scoreWhenSame(m_score1)
     } else if (m_score1 >= 4 || m_score2 >= 4) {
       val minusResult = m_score1 - m_score2
       if (minusResult == 1) score = "Advantage player1"
@@ -44,4 +38,12 @@ class TennisGame1(val player1Name: String, val player2Name: String) extends Tenn
     return score
   }
 
+  private def scoreWhenSame(score: Int) =
+    score match {
+      case 0 => "Love-All"
+      case 1 => "Fifteen-All"
+      case 2 => "Thirty-All"
+      case _ => "Deuce"
+
+    }
 }
