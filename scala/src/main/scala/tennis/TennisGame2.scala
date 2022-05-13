@@ -26,17 +26,16 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
     if (P1point == P2point && P1point >= 3)
       return "Deuce"
 
-    var score = ""
-    if (P1point == P2point && P1point < 4) {
-      if (P1point == 0)
-        score = "Love"
-      if (P1point == 1)
-        score = "Fifteen"
-      if (P1point == 2)
-        score = "Thirty"
-      score += "-All"
+    if (P1point == P2point) {
+      assert(P1point < 4, "P1point !<4: " + P1point)
+      return P1point match {
+        case 0 => "Love-All"
+        case 1 => "Fifteen-All"
+        case 2 => "Thirty-All"
+      }
     }
 
+    var score = ""
     if (P1point > 0 && P2point == 0) {
       if (P1point == 1)
         P1res = "Fifteen"
