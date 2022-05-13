@@ -46,7 +46,7 @@ class TennisGame2(val player1Name: String, val player2Name: String) extends Tenn
   def wonPoint(player: String): Unit =
     points = points pointTo player
 
-  trait PointsAnalyzer
+  sealed trait PointsAnalyzer
   case class Else(p1: Int, p2: Int) extends PointsAnalyzer
   case class Same(p: Int) extends PointsAnalyzer
   case class Love2(p: Int) extends PointsAnalyzer
